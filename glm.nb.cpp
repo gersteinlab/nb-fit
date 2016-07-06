@@ -507,11 +507,11 @@ double nb_aic (vector<double> &y, vector<double> &mu, double theta) {
 lmfit Cdqrls(vector<vector<double> > &x, vector<double> &y, double tol, bool chk) {
 	
 	// double ans;
-	double **qr;
-	double **y_for;
-	double **coefficients;
-	double **residuals;
-	double **effects;
+	double *qr;
+	double *y_for;
+	double *coefficients;
+	double *residuals;
+	double *effects;
 	int *pivot;
 	double *qraux;
 	
@@ -559,36 +559,27 @@ lmfit Cdqrls(vector<vector<double> > &x, vector<double> &y, double tol, bool chk
 	
 	// Turn y into a matrix for use in Fortran
 	// y_for = y;
-	y_for = (double **)malloc(sizeof(double *));
-	*y_for = (double *)malloc(n*sizeof(double));
+	y_for = (double *)malloc(n*sizeof(double));
 	for (unsigned int i = 0; i < y.size(); i++) {
-		(*y_for)[i] = y[i];
+		y_for[i] = y[i];
 	}
 	
 	// Coefficients mapping
-	coefficients = (double **)malloc(sizeof(double *));
-	*coefficients = (double *)malloc(p*sizeof(double));
+	coefficients = (double *)malloc(p*sizeof(double));
 	for (int i = 0; i < p; i++) {
-		(*coefficients)[i] = 0.0;
+		coefficients[i] = 0.0;
 	}
-	
-// 	for (unsigned int i = 0; i < p; i++) {
-// 		vector<double> temp (n,0.0);
-// 		coefficients.push_back(temp);
-// 	}
 
 	// residuals = y;
-	residuals = (double **)malloc(sizeof(double *));
-	*residuals = (double *)malloc((int)y.size()*sizeof(double));
+	residuals = (double *)malloc((int)y.size()*sizeof(double));
 	for (unsigned int i = 0; i < y.size(); i++) {
-		(*residuals)[i] = y[i];
+		residuals[i] = y[i];
 	}
 	
 	// effects = y;
-	effects = (double **)malloc(sizeof(double *));
-	*effects = (double *)malloc((int)y.size()*sizeof(double));
+	effects = (double *)malloc((int)y.size()*sizeof(double));
 	for (unsigned int i = 0; i < y.size(); i++) {
-		(*effects)[i] = y[i];
+		effects[i] = y[i];
 	}
 	
 	pivot = (int *)malloc(p*sizeof(int));
