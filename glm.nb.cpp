@@ -634,17 +634,17 @@ lmfit Cdqrls(vector<vector<double> > &x, vector<double> &y, double tol, bool chk
 	
 	vector<double> coefficients_vec;
 	for (int i = 0; i < p; i++) {
-		coefficients_vec.push_back(coefficients[0][i]);
+		coefficients_vec.push_back(coefficients[i]);
 	}
 	
 	vector<double> residuals_vec;
 	for (int i = 0; i < (int)y.size(); i++) {
-		residuals_vec.push_back(residuals[0][i]);
+		residuals_vec.push_back(residuals[i]);
 	}
 	
 	vector<double> effects_vec;
 	for (int i = 0; i < (int)y.size(); i++) {
-		effects_vec.push_back(effects[0][i]);
+		effects_vec.push_back(effects[i]);
 	}
 	
 	vector<int> pivot_vec;
