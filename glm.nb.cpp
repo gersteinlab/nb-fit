@@ -549,11 +549,11 @@ lmfit Cdqrls(vector<vector<double> > &x, vector<double> &y, double tol, bool chk
 	// Encoding in C types
 	// qr = x;
 	// Use column-major order for Fortran
-	qr = (double **)malloc((int)x.size()*sizeof(double *));
+	int flat_size = n*p;
+	qr = (double *)malloc(flat_size*sizeof(double));
 	for (int i = 0; i < (int)x.size(); i++) {
-		qr[i] = (double *)malloc((int)x[i].size()*sizeof(double));
 		for (int j = 0; j < (int)x[i].size(); j++) {
-			qr[i][j] = x[i][j];
+			qr[i*n+j] = x[i][j];
 		}
 	}
 	
@@ -615,24 +615,24 @@ lmfit Cdqrls(vector<vector<double> > &x, vector<double> &y, double tol, bool chk
 	}
 	
 	// DEBUG
-	printf("Breakpoint Zeta\n");
-	for (int i = 0; i < (int)x.size(); i++) {
-		for (int j = 9; j < 10; j++) {
-			if (qr[i][j]) {
-				printf("True\n");
-			} else {
-				printf("False\n");
-			}
-		}
-	}
-	exit(0);
+// 	printf("Breakpoint Zeta\n");
+// 	for (int i = 0; i < (int)x.size(); i++) {
+// 		for (int j = 9; j < 10; j++) {
+// 			if (qr[i][j]) {
+// 				printf("True\n");
+// 			} else {
+// 				printf("False\n");
+// 			}
+// 		}
+// 	}
+// 	exit(0);
 	
 	// Re-encode in C++ vectors
 	vector<vector<double> > qr_vec;
 	for (int i = 0; i < (int)x.size(); i++) {
 		vector<double> temp;
 		for (int j = 0; j < (int)x[i].size(); j++) {
-			temp.push_back(qr[i][j]);
+			temp.push_back(qr[i*n+j]);
 		}
 		qr_vec.push_back(temp);
 	}
