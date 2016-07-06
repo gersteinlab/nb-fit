@@ -18,7 +18,8 @@ using namespace std;
 #include "lmfit.cpp"
 #include "fit.cpp"
 
-#define STRSIZE 10240
+// #define STRSIZE 10240
+#define STRSIZE 256
 
 /* This code is a C++ implementation of a negative binomial fitting function */
 
@@ -600,6 +601,7 @@ lmfit Cdqrls(vector<vector<double> > &x, vector<double> &y, double tol, bool chk
 	
 	// DEBUG
 	printf("Breakpoint Yocto\n");
+	// exit(0);
 	
 	// Call dqrls
 	dqrls_(qr, &n, &p, y_for, &ny, &rtol, coefficients, residuals, effects, &rank, 
@@ -614,6 +616,16 @@ lmfit Cdqrls(vector<vector<double> > &x, vector<double> &y, double tol, bool chk
 	
 	// DEBUG
 	printf("Breakpoint Zeta\n");
+	for (int i = 0; i < (int)x.size(); i++) {
+		for (int j = 9; j < 10; j++) {
+			if (qr[i][j]) {
+				printf("True\n");
+			} else {
+				printf("False\n");
+			}
+		}
+	}
+	exit(0);
 	
 	// Re-encode in C++ vectors
 	vector<vector<double> > qr_vec;
@@ -624,6 +636,10 @@ lmfit Cdqrls(vector<vector<double> > &x, vector<double> &y, double tol, bool chk
 		}
 		qr_vec.push_back(temp);
 	}
+	
+	// DEBUG
+	printf("Breakpoint Molto\n");
+	exit(0);
 	
 	vector<double> coefficients_vec;
 	for (int i = 0; i < p; i++) {
@@ -651,7 +667,11 @@ lmfit Cdqrls(vector<vector<double> > &x, vector<double> &y, double tol, bool chk
 	}
 	
 	lmfit lm1 (qr_vec, coefficients_vec, residuals_vec, effects_vec, rank, pivot_vec, qraux_vec, tol, pivoted);
-	printf("Breakpoint Eta\n"); // DEBUG
+	
+	// DEBUG
+	printf("Breakpoint Eta\n");
+	// exit(0);
+	
 	return lm1;
 }
 
@@ -778,6 +798,7 @@ fit glm_fit (vector<double> &y, vector<vector<double> > &x, double init_theta,
 	
 	// DEBUG
 	printf("Breakpoint Upsilon\n");
+	// exit(0);
 	
 	// The iteratively reweighting L.S. iteration
 	int iter = 0;
@@ -836,11 +857,13 @@ fit glm_fit (vector<double> &y, vector<vector<double> > &x, double init_theta,
 		
 		// DEBUG
 		printf("Breakpoint Upsilon 2\n");
+		// exit(0);
 		
 		lm = Cdqrls(prefit_x, prefit_y, min(1e-7, epsilon/1000), false);
 		
 		// DEBUG
 		printf("Breakpoint Tau 2\n");
+		// exit(0);
 		
 		vector<double> lm_coefficients = lm.getCoefficients();
 		for (int j = 0; j < nvars; j++) {
@@ -1095,9 +1118,17 @@ fit glm_nb (vector<double> &y, vector<vector<double> > &x,
 	
 	// Initial fit
 	vector<double> vec0;
-	// printf("Breakpoint Upsilon\n"); // DEBUG
+	
+	// DEBUG
+	// printf("Breakpoint Upsilon\n");
+	// exit(0);
+	
 	fit this_fit = glm_fit(y, x, init_theta, vec0);
-	// printf("Breakpoint Tau\n"); // DEBUG
+	
+	// DEBUG
+	printf("Breakpoint Tau\n");
+	// exit(0);
+	
 	vector<double> mu = this_fit.getFittedValues();
 	pair <double,double> theta_ret = theta_ml(y, mu, (int)y.size(), 25);
 	double th = theta_ret.first;
@@ -1115,6 +1146,7 @@ fit glm_nb (vector<double> &y, vector<vector<double> > &x,
 	
 	// DEBUG
 	printf("Breakpoint Alpha\n");
+	// exit(0);
 	
 	while ((iter < maxit) && (abs(Lm0 - Lm)/d1 + abs(del)/d2) > epsilon) {
 		vector<double> eta;
@@ -1161,6 +1193,9 @@ int main (int argc, char* argv[]) {
  	
  	// The initial theta to use in fitting
  	double init_theta;
+ 	
+ 	// DEBUG
+ 	// printf("Breakpoint Pre-Sigma\n");
  	
  	// Argument checking
  	if (argc != 4) {
@@ -1251,7 +1286,7 @@ int main (int argc, char* argv[]) {
 			
 			// Check if we've reached the end-of-line
 // 			if (ws_index+1 >= line.length()) {
-// 				break;
+				break;
 // 			} else {
 				line = line.substr(ws_index+1);
 // 			}
@@ -1259,7 +1294,7 @@ int main (int argc, char* argv[]) {
 		}
 		
 		// DEBUG
-		// printf("Breakpoint Tau\n");
+		printf("Breakpoint Tau\n");
 		// exit(0);
 		
 		x_tr.push_back(vec);
@@ -1287,6 +1322,7 @@ int main (int argc, char* argv[]) {
 	
 	// DEBUG
 	printf("Breakpoint Gamma\n");
+	// exit(0);
 	
 	// Do the actual glm_nb fitting
 	fit outfit = glm_nb(y, x, init_theta);
