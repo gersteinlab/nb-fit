@@ -591,7 +591,7 @@ lmfit Cdqrls(vector<vector<double> > &x, vector<double> &y, double tol, bool chk
 	work = (double *)malloc(2*p*sizeof(double));
 	
 	// DEBUG
-	printf("Breakpoint Yocto\n");
+	// printf("Breakpoint Yocto\n");
 	// exit(0);
 	
 	// Call dqrls
@@ -629,8 +629,8 @@ lmfit Cdqrls(vector<vector<double> > &x, vector<double> &y, double tol, bool chk
 	}
 	
 	// DEBUG
-	printf("Breakpoint Molto\n");
-	exit(0);
+	// printf("Breakpoint Molto\n");
+	// exit(0);
 	
 	vector<double> coefficients_vec;
 	for (int i = 0; i < p; i++) {
@@ -660,7 +660,7 @@ lmfit Cdqrls(vector<vector<double> > &x, vector<double> &y, double tol, bool chk
 	lmfit lm1 (qr_vec, coefficients_vec, residuals_vec, effects_vec, rank, pivot_vec, qraux_vec, tol, pivoted);
 	
 	// DEBUG
-	printf("Breakpoint Eta\n");
+	// printf("Breakpoint Eta\n");
 	// exit(0);
 	
 	return lm1;
@@ -788,7 +788,7 @@ fit glm_fit (vector<double> &y, vector<vector<double> > &x, double init_theta,
 	double dev;
 	
 	// DEBUG
-	printf("Breakpoint Upsilon\n");
+	// printf("Breakpoint Upsilon\n");
 	// exit(0);
 	
 	// The iteratively reweighting L.S. iteration
@@ -847,13 +847,13 @@ fit glm_fit (vector<double> &y, vector<vector<double> > &x, double init_theta,
 		// }
 		
 		// DEBUG
-		printf("Breakpoint Upsilon 2\n");
+		// printf("Breakpoint Upsilon 2\n");
 		// exit(0);
 		
 		lm = Cdqrls(prefit_x, prefit_y, min(1e-7, epsilon/1000), false);
 		
 		// DEBUG
-		printf("Breakpoint Tau 2\n");
+		// printf("Breakpoint Tau 2\n");
 		// exit(0);
 		
 		vector<double> lm_coefficients = lm.getCoefficients();
@@ -1008,7 +1008,7 @@ fit glm_fit (vector<double> &y, vector<vector<double> > &x, double init_theta,
 	// end IRLS iteration
 	
 	// DEBUG
-	printf("Breakpoint Tau\n");
+	// printf("Breakpoint Tau\n");
 	
 	if (!conv) {
 		printf("Warning: fitting algorithm did not converge\n");
@@ -1117,7 +1117,7 @@ fit glm_nb (vector<double> &y, vector<vector<double> > &x,
 	fit this_fit = glm_fit(y, x, init_theta, vec0);
 	
 	// DEBUG
-	printf("Breakpoint Tau\n");
+	// printf("Breakpoint Tau\n");
 	// exit(0);
 	
 	vector<double> mu = this_fit.getFittedValues();
@@ -1136,7 +1136,7 @@ fit glm_nb (vector<double> &y, vector<vector<double> > &x,
 	fit cur_fit;
 	
 	// DEBUG
-	printf("Breakpoint Alpha\n");
+	// printf("Breakpoint Alpha\n");
 	// exit(0);
 	
 	while ((iter < maxit) && (abs(Lm0 - Lm)/d1 + abs(del)/d2) > epsilon) {
@@ -1158,7 +1158,7 @@ fit glm_nb (vector<double> &y, vector<vector<double> > &x,
 	}
 	
 	// DEBUG
-	printf("Breakpoint Beta\n");
+	// printf("Breakpoint Beta\n");
 	
 	if (iter > maxit) {
 		printf("Warning: alternation limit reached\n");
@@ -1200,7 +1200,7 @@ int main (int argc, char* argv[]) {
  	}
  	
  	// DEBUG
- 	printf("Breakpoint Sigma\n");
+ 	// printf("Breakpoint Sigma\n");
  	
  	// Data structures for imported data
  	vector<double> y;
@@ -1254,7 +1254,7 @@ int main (int argc, char* argv[]) {
 	vector<vector<double> > x_tr;
 	
 	// DEBUG
-	printf("Breakpoint Delta\n");
+	// printf("Breakpoint Delta\n");
 	
 	// Bring predictor file data into memory
 	FILE *xfile_ptr = fopen(x_file.c_str(), "r");
@@ -1285,7 +1285,7 @@ int main (int argc, char* argv[]) {
 		}
 		
 		// DEBUG
-		printf("Breakpoint Tau\n");
+		// printf("Breakpoint Tau\n");
 		// exit(0);
 		
 		x_tr.push_back(vec);
@@ -1312,7 +1312,7 @@ int main (int argc, char* argv[]) {
 	x_tr.clear();
 	
 	// DEBUG
-	printf("Breakpoint Gamma\n");
+	// printf("Breakpoint Gamma\n");
 	// exit(0);
 	
 	// Do the actual glm_nb fitting
