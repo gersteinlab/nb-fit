@@ -507,11 +507,11 @@ double nb_aic (vector<double> &y, vector<double> &mu, double theta) {
 lmfit Cdqrls(vector<vector<double> > &x, vector<double> &y, double tol, bool chk) {
 	
 	// double ans;
-	double **qr;
-	double **y_for;
-	double **coefficients;
-	double **residuals;
-	double **effects;
+	double *qr;
+	double *y_for;
+	double *coefficients;
+	double *residuals;
+	double *effects;
 	int *pivot;
 	double *qraux;
 	
@@ -549,46 +549,37 @@ lmfit Cdqrls(vector<vector<double> > &x, vector<double> &y, double tol, bool chk
 	// Encoding in C types
 	// qr = x;
 	// Use column-major order for Fortran
-	qr = (double **)malloc((int)x.size()*sizeof(double *));
+	int flat_size = n*p;
+	qr = (double *)malloc(flat_size*sizeof(double));
 	for (int i = 0; i < (int)x.size(); i++) {
-		qr[i] = (double *)malloc((int)x[i].size()*sizeof(double));
 		for (int j = 0; j < (int)x[i].size(); j++) {
-			qr[i][j] = x[i][j];
+			qr[i*n+j] = x[i][j];
 		}
 	}
 	
 	// Turn y into a matrix for use in Fortran
 	// y_for = y;
-	y_for = (double **)malloc(sizeof(double *));
-	*y_for = (double *)malloc(n*sizeof(double));
+	y_for = (double *)malloc(n*sizeof(double));
 	for (unsigned int i = 0; i < y.size(); i++) {
-		(*y_for)[i] = y[i];
+		y_for[i] = y[i];
 	}
 	
 	// Coefficients mapping
-	coefficients = (double **)malloc(sizeof(double *));
-	*coefficients = (double *)malloc(p*sizeof(double));
+	coefficients = (double *)malloc(p*sizeof(double));
 	for (int i = 0; i < p; i++) {
-		(*coefficients)[i] = 0.0;
+		coefficients[i] = 0.0;
 	}
-	
-// 	for (unsigned int i = 0; i < p; i++) {
-// 		vector<double> temp (n,0.0);
-// 		coefficients.push_back(temp);
-// 	}
 
 	// residuals = y;
-	residuals = (double **)malloc(sizeof(double *));
-	*residuals = (double *)malloc((int)y.size()*sizeof(double));
+	residuals = (double *)malloc((int)y.size()*sizeof(double));
 	for (unsigned int i = 0; i < y.size(); i++) {
-		(*residuals)[i] = y[i];
+		residuals[i] = y[i];
 	}
 	
 	// effects = y;
-	effects = (double **)malloc(sizeof(double *));
-	*effects = (double *)malloc((int)y.size()*sizeof(double));
+	effects = (double *)malloc((int)y.size()*sizeof(double));
 	for (unsigned int i = 0; i < y.size(); i++) {
-		(*effects)[i] = y[i];
+		effects[i] = y[i];
 	}
 	
 	pivot = (int *)malloc(p*sizeof(int));
@@ -600,7 +591,7 @@ lmfit Cdqrls(vector<vector<double> > &x, vector<double> &y, double tol, bool chk
 	work = (double *)malloc(2*p*sizeof(double));
 	
 	// DEBUG
-	printf("Breakpoint Yocto\n");
+	// printf("Breakpoint Yocto\n");
 	// exit(0);
 	
 	// Call dqrls
@@ -615,45 +606,45 @@ lmfit Cdqrls(vector<vector<double> > &x, vector<double> &y, double tol, bool chk
 	}
 	
 	// DEBUG
-	printf("Breakpoint Zeta\n");
-	for (int i = 0; i < (int)x.size(); i++) {
-		for (int j = 9; j < 10; j++) {
-			if (qr[i][j]) {
-				printf("True\n");
-			} else {
-				printf("False\n");
-			}
-		}
-	}
-	exit(0);
+// 	printf("Breakpoint Zeta\n");
+// 	for (int i = 0; i < (int)x.size(); i++) {
+// 		for (int j = 9; j < 10; j++) {
+// 			if (qr[i][j]) {
+// 				printf("True\n");
+// 			} else {
+// 				printf("False\n");
+// 			}
+// 		}
+// 	}
+// 	exit(0);
 	
 	// Re-encode in C++ vectors
 	vector<vector<double> > qr_vec;
 	for (int i = 0; i < (int)x.size(); i++) {
 		vector<double> temp;
 		for (int j = 0; j < (int)x[i].size(); j++) {
-			temp.push_back(qr[i][j]);
+			temp.push_back(qr[i*n+j]);
 		}
 		qr_vec.push_back(temp);
 	}
 	
 	// DEBUG
-	printf("Breakpoint Molto\n");
-	exit(0);
+	// printf("Breakpoint Molto\n");
+	// exit(0);
 	
 	vector<double> coefficients_vec;
 	for (int i = 0; i < p; i++) {
-		coefficients_vec.push_back(coefficients[0][i]);
+		coefficients_vec.push_back(coefficients[i]);
 	}
 	
 	vector<double> residuals_vec;
 	for (int i = 0; i < (int)y.size(); i++) {
-		residuals_vec.push_back(residuals[0][i]);
+		residuals_vec.push_back(residuals[i]);
 	}
 	
 	vector<double> effects_vec;
 	for (int i = 0; i < (int)y.size(); i++) {
-		effects_vec.push_back(effects[0][i]);
+		effects_vec.push_back(effects[i]);
 	}
 	
 	vector<int> pivot_vec;
@@ -669,7 +660,7 @@ lmfit Cdqrls(vector<vector<double> > &x, vector<double> &y, double tol, bool chk
 	lmfit lm1 (qr_vec, coefficients_vec, residuals_vec, effects_vec, rank, pivot_vec, qraux_vec, tol, pivoted);
 	
 	// DEBUG
-	printf("Breakpoint Eta\n");
+	// printf("Breakpoint Eta\n");
 	// exit(0);
 	
 	return lm1;
@@ -797,7 +788,7 @@ fit glm_fit (vector<double> &y, vector<vector<double> > &x, double init_theta,
 	double dev;
 	
 	// DEBUG
-	printf("Breakpoint Upsilon\n");
+	// printf("Breakpoint Upsilon\n");
 	// exit(0);
 	
 	// The iteratively reweighting L.S. iteration
@@ -856,13 +847,13 @@ fit glm_fit (vector<double> &y, vector<vector<double> > &x, double init_theta,
 		// }
 		
 		// DEBUG
-		printf("Breakpoint Upsilon 2\n");
+		// printf("Breakpoint Upsilon 2\n");
 		// exit(0);
 		
 		lm = Cdqrls(prefit_x, prefit_y, min(1e-7, epsilon/1000), false);
 		
 		// DEBUG
-		printf("Breakpoint Tau 2\n");
+		// printf("Breakpoint Tau 2\n");
 		// exit(0);
 		
 		vector<double> lm_coefficients = lm.getCoefficients();
@@ -1017,7 +1008,7 @@ fit glm_fit (vector<double> &y, vector<vector<double> > &x, double init_theta,
 	// end IRLS iteration
 	
 	// DEBUG
-	printf("Breakpoint Tau\n");
+	// printf("Breakpoint Tau\n");
 	
 	if (!conv) {
 		printf("Warning: fitting algorithm did not converge\n");
@@ -1126,7 +1117,7 @@ fit glm_nb (vector<double> &y, vector<vector<double> > &x,
 	fit this_fit = glm_fit(y, x, init_theta, vec0);
 	
 	// DEBUG
-	printf("Breakpoint Tau\n");
+	// printf("Breakpoint Tau\n");
 	// exit(0);
 	
 	vector<double> mu = this_fit.getFittedValues();
@@ -1145,7 +1136,7 @@ fit glm_nb (vector<double> &y, vector<vector<double> > &x,
 	fit cur_fit;
 	
 	// DEBUG
-	printf("Breakpoint Alpha\n");
+	// printf("Breakpoint Alpha\n");
 	// exit(0);
 	
 	while ((iter < maxit) && (abs(Lm0 - Lm)/d1 + abs(del)/d2) > epsilon) {
@@ -1167,7 +1158,7 @@ fit glm_nb (vector<double> &y, vector<vector<double> > &x,
 	}
 	
 	// DEBUG
-	printf("Breakpoint Beta\n");
+	// printf("Breakpoint Beta\n");
 	
 	if (iter > maxit) {
 		printf("Warning: alternation limit reached\n");
@@ -1209,7 +1200,7 @@ int main (int argc, char* argv[]) {
  	}
  	
  	// DEBUG
- 	printf("Breakpoint Sigma\n");
+ 	// printf("Breakpoint Sigma\n");
  	
  	// Data structures for imported data
  	vector<double> y;
@@ -1263,7 +1254,7 @@ int main (int argc, char* argv[]) {
 	vector<vector<double> > x_tr;
 	
 	// DEBUG
-	printf("Breakpoint Delta\n");
+	// printf("Breakpoint Delta\n");
 	
 	// Bring predictor file data into memory
 	FILE *xfile_ptr = fopen(x_file.c_str(), "r");
@@ -1294,7 +1285,7 @@ int main (int argc, char* argv[]) {
 		}
 		
 		// DEBUG
-		printf("Breakpoint Tau\n");
+		// printf("Breakpoint Tau\n");
 		// exit(0);
 		
 		x_tr.push_back(vec);
@@ -1321,7 +1312,7 @@ int main (int argc, char* argv[]) {
 	x_tr.clear();
 	
 	// DEBUG
-	printf("Breakpoint Gamma\n");
+	// printf("Breakpoint Gamma\n");
 	// exit(0);
 	
 	// Do the actual glm_nb fitting
