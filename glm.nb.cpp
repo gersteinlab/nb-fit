@@ -18,8 +18,8 @@ using namespace std;
 #include "lmfit.cpp"
 #include "fit.cpp"
 
-// #define STRSIZE 10240
-#define STRSIZE 256
+#define STRSIZE 1024
+// #define STRSIZE 256
 
 /* This code is a C++ implementation of a negative binomial fitting function */
 
@@ -1267,7 +1267,7 @@ int main (int argc, char* argv[]) {
 		// printf("Breakpoint Upsilon\n");
 		
 		// DEBUG
-		for (int i = 0; i < 21; i++) {
+		// for (int i = 0; i < 21; i++) {
 		
 		while (line != "") {
 			// printf("%s\n", line.c_str()); // DEBUG
@@ -1281,7 +1281,7 @@ int main (int argc, char* argv[]) {
 // 			} else {
 				line = line.substr(ws_index+1);
 // 			}
-		}
+// 		}
 		}
 		
 		// DEBUG
